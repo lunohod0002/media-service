@@ -33,7 +33,6 @@ public class MinioService {
         this.minioClient = minioClient;
         this.mediaRepository = mediaRepository;
     }
-    @Async
     public void uploadFile(MultipartFile file) throws Exception {
 
             String fileName = file.getOriginalFilename();
@@ -56,13 +55,12 @@ public class MinioService {
             }
 
     }
-    @Async
-    public CompletableFuture<InputStream> downloadFile(String fileName) throws Exception {
-        return CompletableFuture.completedFuture(
+    public InputStream downloadFile(String fileName) throws Exception {
+        return
                 minioClient.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
                         .object(fileName)
-                        .build()));
+                        .build());
     }
 }
