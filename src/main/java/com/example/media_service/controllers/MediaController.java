@@ -17,6 +17,9 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/api/medias")
@@ -26,14 +29,18 @@ public class MediaController {
         this.minioService = minioService;
     }
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") List<MultipartFile> files) {
         try {
-            minioService.uploadFile(file);
-            return ResponseEntity.ok("File uploaded successfully: " + file.getName());
+            for(MultipartFile file:files) {
+                minioService.uploadFile(file);
+            }
+            return ResponseEntity.ok("File uploaded successfully: ");
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
     @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
         try {
