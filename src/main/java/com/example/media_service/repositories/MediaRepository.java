@@ -23,6 +23,7 @@ public class MediaRepository {
         DataSource dataSource = new DriverManagerDataSource(url, user, password);
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
+    @Async
     public void insertMediaAsync(String name, String type,String urlRef) {
             try {
                 String connectionString = "jdbc:postgresql://localhost:5432/postgres";
