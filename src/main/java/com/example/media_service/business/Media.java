@@ -1,7 +1,5 @@
-package com.example.media_service.models;
+package com.example.media_service.business;
 
-
-import java.util.Set;
 
 public class Media {
     private MediaType type;

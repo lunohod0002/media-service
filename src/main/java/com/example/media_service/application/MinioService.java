@@ -1,24 +1,16 @@
-package com.example.media_service.services;
+package com.example.media_service.application;
 
-import com.example.media_service.models.MediaType;
-import com.example.media_service.repositories.MediaRepository;
+import com.example.media_service.business.MediaType;
+import com.example.media_service.data.MediaRepository;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @Service
 public class MinioService {

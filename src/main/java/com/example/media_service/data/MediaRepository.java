@@ -1,15 +1,12 @@
-package com.example.media_service.repositories;
+package com.example.media_service.data;
 
 
-import com.example.media_service.models.Media;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Repository
 public class MediaRepository {

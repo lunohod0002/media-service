@@ -1,7 +1,6 @@
-package com.example.media_service.controllers;
+package com.example.media_service.presentation;
 
-import com.example.media_service.services.MinioService;
-import io.minio.*;
+import com.example.media_service.application.MinioService;
 import io.minio.errors.ErrorResponseException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -14,12 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/api/medias")

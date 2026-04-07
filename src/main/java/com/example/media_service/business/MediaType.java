@@ -1,4 +1,4 @@
-package com.example.media_service.models;
+package com.example.media_service.business;
 
 public enum MediaType {
     PHOTO,
