@@ -1,6 +1,7 @@
 package com.example.media_service.data;
 
 
+import com.example.media_service.business.repositories.MediaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.Async;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 
 @Repository
-public class MediaRepository {
+public class MinioMediaRepository implements MediaRepository {
     private JdbcTemplate jdbcTemplate;
 
 

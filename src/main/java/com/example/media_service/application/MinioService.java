@@ -1,7 +1,8 @@
 package com.example.media_service.application;
 
 import com.example.media_service.business.MediaType;
-import com.example.media_service.data.MediaRepository;
+import com.example.media_service.business.repositories.MediaRepository;
+import com.example.media_service.data.MinioMediaRepository;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -19,11 +20,11 @@ public class MinioService {
 
 
     private final MinioClient minioClient;
-    private final MediaRepository mediaRepository;
+    private final MediaRepository minioMediaRepository;
 
-    public MinioService(MinioClient minioClient, MediaRepository mediaRepository) {
+    public MinioService(MinioClient minioClient, MediaRepository minioMediaRepository) {
         this.minioClient = minioClient;
-        this.mediaRepository = mediaRepository;
+        this.minioMediaRepository = minioMediaRepository;
     }
     public void uploadFile(MultipartFile file) throws Exception {
 
@@ -42,7 +43,7 @@ public class MinioService {
                 default -> null;
             };
             if (type != null){
-                mediaRepository.insertMediaAsync(fileName,type.name(),"/api/medias/download/"+fileName);
+                minioMediaRepository.insertMediaAsync(fileName,type.name(),"/api/medias/download/"+fileName);
 
             }
 
