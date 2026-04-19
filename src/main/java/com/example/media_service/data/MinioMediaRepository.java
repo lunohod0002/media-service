@@ -1,7 +1,7 @@
 package com.example.media_service.data;
 
 
-import com.example.media_service.business.repositories.MediaRepository;
+import com.example.media_service.domain.repositories.MediaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.Async;

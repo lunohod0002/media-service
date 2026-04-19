@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,12 +24,14 @@ public class MediaController {
         this.minioService = minioService;
     }
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") List<MultipartFile> files) {
+    public ResponseEntity uploadFile(@RequestParam("file") List<MultipartFile> files) {
         try {
+            List<String> result=new ArrayList<>();
             for(MultipartFile file:files) {
-                minioService.uploadFile(file);
+                String name=minioService.uploadFile(file);
+                result.add(name);
             }
-            return ResponseEntity.ok("File uploaded successfully: ");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
