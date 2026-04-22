@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 
 @Repository
-public class MinioMediaRepository implements MediaRepository {
+public class PostgresMediaRepository implements MediaRepository {
     private JdbcTemplate jdbcTemplate;
 
 
