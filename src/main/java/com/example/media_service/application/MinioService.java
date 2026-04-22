@@ -75,7 +75,7 @@ public class MinioService {
 
         if (type != null) {
             // Не забудь обновить путь до файла, если стал использовать UUID
-            // minioMediaRepository.insertMediaAsync(fileName, type.name(), "/api/medias/download/" + fileName);
+             minioMediaRepository.insertMediaAsync(fileName, type.name(), "/api/medias/download/" + fileName);
             return fileName;
         } else {
             throw new RuntimeException("Не удалосьопределить тип");
