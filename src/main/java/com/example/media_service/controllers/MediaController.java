@@ -1,4 +1,4 @@
-package com.example.media_service.presentation;
+package com.example.media_service.controllers;
 
 import com.example.media_service.application.MinioService;
 import io.minio.errors.ErrorResponseException;
