@@ -2,11 +2,7 @@ package com.example.media_service.application;
 
 import com.example.media_service.domain.MediaType;
 import com.example.media_service.domain.repositories.MediaRepository;
-import io.minio.BucketExistsArgs;
-import io.minio.GetObjectArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import jakarta.annotation.PostConstruct; // Для Spring Boot 3.x. Если у тебя 2.x, используй javax.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,8 +25,27 @@ public class MinioService {
         this.minioClient = minioClient;
         this.minioMediaRepository = minioMediaRepository;
     }
+    public long getFileSize(String fileName) throws Exception {
+        StatObjectResponse stat = minioClient.statObject(
+                StatObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .build()
+        );
+        return stat.size();
+    }
+    public InputStream downloadFilePart(String fileName, long offset, long length) throws Exception {
+        return minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .offset(offset)
+                        .length(length)
+                        .build()
+        );
+    }
 
-    // Этот метод выполнится один раз при старте приложения
+
     @PostConstruct
     public void init() {
         try {
@@ -49,6 +64,7 @@ public class MinioService {
             throw new RuntimeException("Ошибка при проверке/создании бакета MinIO: " + bucketName, e);
         }
     }
+    
 
     public String uploadFile(MultipartFile file) throws Exception {
         // Рекомендация: лучше генерировать уникальное имя, чтобы файлы с одинаковыми именами не перезаписывали друг друга
