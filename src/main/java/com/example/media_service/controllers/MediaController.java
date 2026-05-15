@@ -44,44 +44,31 @@ public class MediaController {
             @RequestHeader HttpHeaders headers // Добавляем получение заголовков запроса
     ) {
         try {
-            // 1. Получаем размер файла (он нужен в любом случае)
             long fileSize = minioService.getFileSize(filename);
-
-            // Определяем тип контента
             String mimeType = URLConnection.guessContentTypeFromName(filename);
             String contentType = (mimeType != null) ? mimeType : "application/octet-stream";
-
-            // 2. Проверяем, есть ли заголовок Range в запросе от ExoPlayer
             List<HttpRange> ranges = headers.getRange();
-
             if (!ranges.isEmpty()) {
-                // ExoPlayer запрашивает конкретный кусок файла (Перемотка или буферизация)
-                HttpRange range = ranges.getFirst(); // Обычно медиаплееры просят только один диапазон за раз
-
-                // Вычисляем начало и конец диапазона
+                HttpRange range = ranges.getFirst();
                 long start = range.getRangeStart(fileSize);
                 long end = range.getRangeEnd(fileSize);
-                long contentLength = end - start + 1; // Размер отдаваемого куска
+                long contentLength = end - start + 1;
 
-                // Запрашиваем этот кусок у MinIO
                 InputStream streamPart = minioService.downloadFilePart(filename, start, contentLength);
 
-                // ВАЖНО: Возвращаем статус 206 Partial Content
                 return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                         .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.ACCEPT_RANGES, "bytes") // Говорим, что мы поддерживаем Range
+                        .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                         .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength))
-                        // Формат: bytes старт-конец/общийРазмер
                         .header(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize)
                         .body(new InputStreamResource(streamPart));
 
             } else {
-                // Если заголовка Range нет (например, обычное скачивание файла браузером)
                 InputStream stream = minioService.downloadFile(filename);
 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.ACCEPT_RANGES, "bytes") // Всё равно говорим, что поддерживаем Range
+                        .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                         .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                         .body(new InputStreamResource(stream));
