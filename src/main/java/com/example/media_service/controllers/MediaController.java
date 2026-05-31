@@ -1,6 +1,6 @@
 package com.example.media_service.controllers;
 
-import com.example.media_service.application.MinioService;
+import com.example.media_service.application.MediaService;
 import io.minio.errors.ErrorResponseException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -16,10 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medias")
 public class MediaController {
-    private final MinioService minioService;
+    private final MediaService mediaService;
 
-    public MediaController(MinioService minioService) {
-        this.minioService = minioService;
+    public MediaController(MediaService mediaService) {
+        this.mediaService = mediaService;
     }
 
     @PostMapping("/upload")
@@ -27,7 +27,7 @@ public class MediaController {
         try {
             List<String> result = new ArrayList<>();
             for (MultipartFile file : files) {
-                String name = minioService.uploadFile(file);
+                String name = mediaService.uploadFile(file);
                 result.add(name);
             }
             return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -41,30 +41,30 @@ public class MediaController {
     @GetMapping("/download/{filename}")
     public ResponseEntity<Resource> downloadFile(
             @PathVariable String filename,
-            @RequestHeader HttpHeaders headers // Добавляем получение заголовков запроса
+            @RequestHeader HttpHeaders headers
     ) {
         try {
-            long fileSize = minioService.getFileSize(filename);
+            long fileSize = mediaService.getFileSize(filename);
             String mimeType = URLConnection.guessContentTypeFromName(filename);
             String contentType = (mimeType != null) ? mimeType : "application/octet-stream";
             List<HttpRange> ranges = headers.getRange();
             if (!ranges.isEmpty()) {
-                HttpRange range = ranges.getFirst();
-                long start = range.getRangeStart(fileSize);
-                long end = range.getRangeEnd(fileSize);
-                long contentLength = end - start + 1;
+        HttpRange range = ranges.getFirst();
+        long start = range.getRangeStart(fileSize);
+        long end = range.getRangeEnd(fileSize);
+        long contentLength = end - start + 1;
 
-                InputStream streamPart = minioService.downloadFilePart(filename, start, contentLength);
+        InputStream streamPart = mediaService.downloadFilePart(filename, start, contentLength);
 
-                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                        .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-                        .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength))
-                        .header(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize)
-                        .body(new InputStreamResource(streamPart));
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+    .contentType(MediaType.parseMediaType(contentType))
+            .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+            .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength))
+            .header(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileSize)
+            .body(new InputStreamResource(streamPart));
 
             } else {
-                InputStream stream = minioService.downloadFile(filename);
+                InputStream stream = mediaService.downloadFile(filename);
 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
