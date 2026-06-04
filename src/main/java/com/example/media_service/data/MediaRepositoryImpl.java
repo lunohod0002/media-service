@@ -30,7 +30,6 @@ public class MediaRepositoryImpl implements MediaRepository {
                         MakeBucketArgs.builder()
                                 .bucket(bucketName)
                                 .build());
-                System.out.println("Бакет " + bucketName + " успешно создан.");
             }
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при проверке/создании бакета MinIO: " + bucketName, e);
