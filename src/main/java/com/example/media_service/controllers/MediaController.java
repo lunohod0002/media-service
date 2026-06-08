@@ -22,6 +22,17 @@ public class MediaController {
         this.mediaService = mediaService;
     }
 
+    @DeleteMapping("/delete/{filename}")
+    public ResponseEntity deleteFile(@PathVariable("filename") String filename) {
+        try {
+            mediaService.deleteFile(filename);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/upload")
     public ResponseEntity uploadFile(@RequestParam("file") List<MultipartFile> files) {
         try {

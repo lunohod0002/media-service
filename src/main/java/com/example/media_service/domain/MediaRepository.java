@@ -14,4 +14,5 @@ public interface MediaRepository {
     void uploadFile(MultipartFile file, String fileName) throws Exception;
     InputStream downloadFile(String fileName) throws Exception;
 
+    void deleteFile(String filename) throws Exception;
 }

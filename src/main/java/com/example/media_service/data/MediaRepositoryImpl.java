@@ -77,4 +77,13 @@ public class MediaRepositoryImpl implements MediaRepository {
                         .object(fileName)
                         .build());
     }
+
+    @Override
+    public void deleteFile(String filename) throws Exception {
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(filename)
+                        .build());
+    }
 }

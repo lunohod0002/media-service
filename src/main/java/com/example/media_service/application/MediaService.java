@@ -38,4 +38,8 @@ public class MediaService {
     public InputStream downloadFile(String fileName) throws Exception {
         return mediaRepository.downloadFile(fileName);
     }
+
+    public void deleteFile(String filename) throws Exception {
+        mediaRepository.deleteFile(filename);
+    }
 }
